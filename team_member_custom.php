@@ -19,7 +19,7 @@
         $member_image = esc_html( get_post_meta( $team_member->ID, 'member_image', true ) );
 
         // get_template_part('content', 'single');
-        $image[] = get_post_meta($team_member->ID, 'member_image', true);
+        $image = get_post_meta($team_member->ID, 'member_image', true);
 
         ?>
         <table>
@@ -43,9 +43,17 @@
                 <?php
                     wp_nonce_field(plugin_basename(__FILE__), 'wp_custom_attachment_nonce');
                     // echo $image['url'];
+
                 ?>
                 <td style="width: 100%">Image</td>
-                <td><input type="file" size="40" id="wp_custom_attachment" name="team_member_image" /></td>
+                <td>
+                <?php
+                    if($image != null)
+                    {
+                        echo '<img href="'.$image.'" width="100px"/><br>';
+                    }
+                ?>
+                <input type="file" size="40" id="wp_custom_attachment" name="team_member_image" /></td>
             </tr>
         </table>
         <?php
