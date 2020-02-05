@@ -18,8 +18,8 @@
         $member_website = esc_html( get_post_meta( $team_member->ID, 'member_website', true ) );
         $member_image = esc_html( get_post_meta( $team_member->ID, 'member_image', true ) );
 
-        get_template_part('content', 'single');
-        $image = get_post_meta($team_member->ID, 'member_image', true);
+        // get_template_part('content', 'single');
+        $image[] = get_post_meta($team_member->ID, 'member_image', true);
 
         ?>
         <table>
@@ -42,7 +42,7 @@
             <tr>
                 <?php
                     wp_nonce_field(plugin_basename(__FILE__), 'wp_custom_attachment_nonce');
-                    echo $image['url'];
+                    // echo $image['url'];
                 ?>
                 <td style="width: 100%">Image</td>
                 <td><input type="file" size="40" id="wp_custom_attachment" name="team_member_image" /></td>
@@ -83,10 +83,13 @@
                 }
 
                 $file   = $_FILES['team_member_image']; 
-                // $upload = wp_handle_upload($file, array('test_form' => false));
-                $upload = wp_upload_bits($_FILES['team_member_image']['name'], null, $_FILES['team_member_image']['tmp_name']);
-    
-                update_post_meta( $team_member_id, 'member_image', $upload );
+                $upload = wp_handle_upload($file, array('test_form' => false));
+                // var_dump($upload);die;
+                // $upload = wp_upload_bits($_FILES['team_member_image']['name'], null, $_FILES['team_member_image']['tmp_name']);
+                if($upload['url'] != null)
+                {
+                    update_post_meta( $team_member_id, 'member_image', $upload['url'] );
+                }
             }
         }
     }
@@ -103,13 +106,13 @@
         $position   = get_post_meta($id, 'member_position', true);
         $email      = get_post_meta($id, 'member_email', true);
         $website    = get_post_meta($id, 'member_website', true); 
-        get_template_part('content', 'single');
-        $image = get_post_meta($id, 'member_image', true);
-        // echo the_title();
+        $image      = get_post_meta($id, 'member_image', true);
+
         echo '<div class="grid-item">';
+
         if($image != null)
         {
-            echo    '<p><img href="'.$image['url'].'" alt="Photo Profile"/></p>';
+            echo    '<p><img href="'.$image.'" alt="Photo Profile"/></p>';
         }
 
         echo    '<p>'.the_title().'</p>';
